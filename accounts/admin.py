@@ -1,22 +1,49 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from accounts import models
+
 
 # Register your models here.
 
-CustomUser = get_user_model()
 
+class UserAdmin(BaseUserAdmin):
+    """Define the admin pages for users."""
 
-class CustomUserAdmin(UserAdmin):
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
-    model = CustomUser
-    list_display = [
-        "email",
-        "username",
-        "is_superuser",
-    ]
+    ordering = ["id"]
+    list_display = ["email", "name"]
+    fieldsets = (
+        ("Main Information", {"fields": ("email", "password")}),
+        ("Personal Information", {"fields": ("name",)}),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                )
+            },
+        ),
+        ("Additional Information", {"fields": ("last_login",)}),
+    )
+    readonly_fields = ["last_login"]
+    add_fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "name",
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                ),
+            },
+        ),
+    )
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(models.User, UserAdmin)

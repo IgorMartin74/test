@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local
     "accounts.apps.AccountsConfig",
-    "pages.app.PagesConfig",
+    "pages.apps.PagesConfig",
+    #"core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
@@ -79,10 +81,10 @@ WSGI_APPLICATION = "django_project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "immunotec",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "db",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASS"),
+        "HOST": os.environ.get("DB_HOST"),
         "PORT": 5432,
     }
 }
@@ -131,4 +133,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Added things
 
-AUTH_USER_MODEL = "accounts.CustomUser"
+AUTH_USER_MODEL = "accounts.User"
